@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="jquery-3.1.1.min.js">
+  </script>
+  <script type="text/javascript" src="js/myfocus-2.0.1.min.js"></script>
+
+  
+
+  <style type="text/css">
+    *{padding: 0;margin: 0;}
+    body{
+      font: 16px "Microsoft yahei";
+    }
+    ul{       
+      list-style: none;
+      
+    }
+    li{
+      margin: 10px;
+    }
+    a{
+      text-decoration: none;
+    }
+    .main{
+      width: 90%;
+      margin: 0 auto;
+      
+    }
+    .main>div{
+      margin-bottom: 10px;
+
+      clear: both;
+    }
+    #div1y{
+      width: 98%;
+      margin: 0 auto;
+      height: 310px;
+    }
+    .head{
+      margin: 0 auto;
+
+    }
+    .div1x img{
+      float: left;
+    }
+    .ul1{
+      float: left;
+      position: relative;
+      margin-left: 20px;
+
+    }
+    .ul1 li{
+      float: left;
+      padding: 0 20px;
+
+      line-height: 60px;
+      text-align: center;
+      font: 120%;
+      
+
+    }
+    .ul1 li:hover{
+      background: #a00;
+      color: #fff;
+
+    }
+    .left1{
+      float: left;
+
+      height: 40px;
+      line-height: 40px;
+      padding: 0 25px;
+      text-align: center;
+      background: #222;
+      color: #bbb;
+
+    }
+    .right1{
+      height: 40px;
+      overflow: hidden;
+      background: #a00;
+      color: #fff;
+    }
+    .ul2{
+
+      position: relative;
+
+      line-height: 40px;
+      padding-left: 10px;
+    }
+    .ul2 li{
+      margin: 0;
+
+    }
+    .left2{
+      float: left;
+      width: 32%;
+
+      background: #fff;
+
+    }
+    .right2{
+
+      float: right;
+      width: 32%;
+
+      background: #fff;
+
+    }
+    .right2-2{
+      padding: 5px;
+    }
+    .middle2{
+      width: 32%;
+
+      overflow: hidden;
+      background: #fff;
+      margin: 0 auto;
+
+    }
+    
+    .left2,.middle2,.right2{
+      border: 1px solid #aaa;
+      border-top: 0;
+    }
+    .left2 img,.middle2 img,.right2 img{
+      width: 100%;
+      margin-bottom: -5px;
+
+    }
+    .left2 .p1,.middle2 .p1,.right2 .p1{
+
+      line-height: 1.5;
+      text-align: center;
+
+    }
+    .left2 .p2,.middle2 .p2,.right2 .p2{
+      height: 30px;
+      line-height: 30px;
+      background: #a00;
+      color: #fff;
+      padding-left: 20px;  
+
+    }
+    .left2x{
+      margin: 10px 4px 0px;
+      border-bottom: 1px solid #999;
+      padding-bottom: 10px;
+
+    }
+    .leftContainer{
+      padding-top: 10px;
+      width: 20%;
+      float: left;
+      margin-right: 4px;
+
+    
+    }
+    .left3{
+
+      width: 100%;
+      height: 60px;
+      padding: 0 5px;
+
+      background: #d00;
+      color: #fff;
+      border-radius: .3em;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      font: 16px "Microsoft yahei";
+
+
+    }
+    .right3{
+      /*float: right;*/
+      /*height: 80px;*/
+      /*overflow: hidden;*/
+      /*width: 100%;*/
+
+      margin: 0 14px 5px;
+
+      font: 15px "Microsoft yahei";
+      /*margin-right: 15px;*/
+
+    }
+    .right h4{
+      line-height: 30px;
+      height: 30px;
+    }
+    .middle2x{
+      width: 90%;
+      margin: 15px auto 0px;
+
+    }
+    .middle2x p{
+
+      padding: 2px 0;
+    }
+    .bottom {
+      clear: both;
+      margin-top: 20px;
+      background: #ddd;
+      color: #000;
+      font: 15px '宋体';
+      line-height: 50px;
+      text-align: center;
+    }
+  </style>
+  <script type="text/javascript">
+    $(function () {
+      // body...
+      $('.left2x:first').clone().appendTo($('.left2x').parent())
+      $('.left2x:first').clone().appendTo($('.left2x').parent())
+
+      var ul2=$('.ul2:first')
+      var ulh=ul2.height()
+      $('.ul2>li:first').clone().appendTo(ul2)
+
+      var lih=$('.ul2>li').height()
+      var a1=document.getElementsByClassName('ul2')[0];
+      var a2=document.getElementsByClassName('right1')[0];
+      
+      var t1=setTimeout(f1,1000)
+      var t2
+      var h1=a2.offsetHeight
+      var h2=a1.offsetHeight
+      function f1() {
+        
+        a2.scrollTop++;
+        t2=setInterval(f2,35)
+        
+      }
+
+      function f2() {
+            if (a2.scrollTop%h1==0) {
+            clearInterval(t2)
+            setTimeout(f1,600)
+
+          }else{
+            a2.scrollTop++;
+            if (a2.scrollTop>=h2-h1) {
+              a2.scrollTop=0
+            }
+          }
+        }
+      })
+   
+
+
+       myFocus.set({
+        id:'div1y',//焦点图盒子ID
+        pattern:'mF_fancy',//风格应用的名称
+        // time:3,//切换时间间隔(秒)
+        // trigger:'click',//触发切换模式:'click'(点击)/'mouseover'(悬停)
+        // width:1000,//设置图片区域宽度(像素)
+        // height:310,//设置图片区域高度(像素)
+        // txtHeight:'default'//文字层高度设置(像素),'default'为默认高度，0为隐藏
+    });
+      // body...
+     
+
+      
+  </script>
+</head>
+<body>
+  <div class="main">
+
+    <div class="div1x">
+      <img src="img/logo.jpg"> 
+      <ul class="ul1">
+        <li>标题</li>
+        <li>标题</li>
+        <li>标题</li>
+        <li>标题</li>
+        <li>标题</li>
+      </ul>
+    </div>
+
+<div id="div1y">
+  <div class="loading"><img src="img/loading.gif" alt="请稍候..." /></div><!--载入画面(可删除)-->
+  <div class="pic"><!--内容列表(li数目可随意增减)-->
+    <ul>
+        <li><a href="#"><img src="img/ad2.jpg" thumb="" alt="标题1" text="详细描述1" /></a></li>
+        <li><a href="#"><img src="img/ad3.jpg" thumb="" alt="标题2" text="详细描述2" /></a></li>
+        <li><a href="#"><img src="img/ad4.jpg" thumb="" alt="标题3" text="详细描述3" /></a></li>
+        
+    </ul>
+  </div>
+</div>
+
+  <div class="div1z">
+    <div class="left1">
+      <b>滚动新闻</b>
+    </div>
+    <div class="right1">
+      <ul class="ul2">
+        <li>X1滚动滚动滚动滚动</li>
+        <li>X2滚动滚动滚动滚动</li>
+        <li>X3滚动滚动滚动滚动</li>
+      </ul>
+    </div>
+  </div>
+    
+ 
+ <div>
+    <div class="left2">
+      <img src="img/bs.jpg">
+      <p class="p1">bssss</p>
+    </div>
+   
+    <div class="right2">
+      <img src="img/js.jpg">
+            <p class="p1">bssss</p>
+
+    </div>
+
+     <div class="middle2">
+      <img src="img/css.jpg">
+            <p class="p1">bssss</p>
+
+    </div>
+  </div>
+
+
+
+
+
+
+   <div>
+    <div class="left2">
+      <p class="p2">bssss</p>
+      <div class="left2x">
+        <div class="leftContainer">
+          <div class="left3">8月<br>23日</div>
+        </div>
+        
+        <div class="right3">
+          <h5>标题3标题3</h5>
+          <p>你的myFocus-2.0.0.min.js文件放在js目录，那么，</p>
+        </div>
+      </div>
+    </div>
+   
+    <div class="right2">
+      <p class="p2">bssss</p>
+      <div class="right2-2">
+        <p>111</p>
+        <p>111</p>
+        <p>36666</p>
+        <p>36666</p><br>
+        <p>111</p>
+        <p>111</p>
+        <p>36666</p>
+        <p>36666</p>
+      </div>
+    </div>
+
+     <div class="middle2">
+      <p class="p2">bssss</p>
+      <div class="middle2x">
+        <img src="img/2048.jpg" alt="">
+        <p style="margin-top: 10px">55555555</p>
+        <p>55555555</p>
+        <p>55555555</p>
+        <p>55555555</p>
+      </div>
+    </div>
+
+ </div>
+
+
+    <div class="bottom">
+      <p>建议把所有的风格文件都存放在这个目</p>
+      
+    </div>
+
+</div>
+</body>
+</html>
