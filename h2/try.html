@@ -1,0 +1,45 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script> -->
+    <script src="framework/angular-ui-router.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Users/zhk/Desktop/web/node_modules/angular-ui-grid/ui-grid.min.css">
+    <script src="/Users/zhk/Desktop/web/node_modules/angular-ui-grid/ui-grid.min.js"></script>
+
+    <script src="helloa.js"></script>
+    <style>
+    .active {
+        color: green;
+        font-weight: bold;
+    }
+    
+    .gridStyle {
+        border: 1px solid red;
+        width: 300px;
+        height: 300px;
+    }
+    </style>
+</head>
+
+<body ng-app="app">
+    <div>
+    <li class="list-group-item">
+        <a ui-sref="home" ui-sref-active="active">Home</a></li>
+        <a ui-sref="other" ui-sref-active="active">Other</a>
+        <ui-view></ui-view>
+    </div>
+    <div ng-controller="MainCtrl">
+        <input type="text" ng-model="p1" name="">
+        <button ng-click="fun2()">alert</button>
+        <button ng-click="fun1()">remove</button>
+    </div>
+    <div ng-controller="ctrl2">
+        <div id="grid1" ui-grid="gridOptions" class="gridStyle"></div>
+    </div>
+</body>
+
+</html>

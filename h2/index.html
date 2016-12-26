@@ -1,0 +1,38 @@
+<!doctype html>
+<html ng-app="app">
+  <head>
+   <link rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+<!-- jquery -->
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<!-- angular -->
+<script src="/Users/zhk/Desktop/web/node_modules/angular/angular.min.js"></script>
+<!-- 1.5.0 angular -->
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script> -->
+<!-- angular-ui-router -->
+<script src="/Users/zhk/Desktop/web/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+<!-- bootstrap -->
+<script src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- ng-grid -->
+<link rel="stylesheet" type="text/css" href="/Users/zhk/Desktop/web/node_modules/angular-ui-grid/ui-grid.min.css">
+    <script src="/Users/zhk/Desktop/web/node_modules/angular-ui-grid/ui-grid.min.js"></script>
+
+   
+
+
+    <script src="hello1.js"></script>
+
+    <style type="text/css">
+      .grid {
+  width: 300px;
+  height: 350px;
+        border: 1px solid red;
+
+}
+    </style>
+  </head>
+  <body>
+    <div ng-controller="MainCtrl">
+      <div id="grid1" ui-grid="gridOptions" class="grid"></div>
+    </div>
+  </body>
+</html>

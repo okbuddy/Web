@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <script src="framework/angular-ui-router.js"></script>
+    <script src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- ui-grid -->
+<link rel="stylesheet" type="text/css" href="/Users/zhk/Desktop/web/node_modules/angular-ui-grid/ui-grid.min.css">
+    <script src="/Users/zhk/Desktop/web/node_modules/angular-ui-grid/ui-grid.min.js"></script>
+
+    <!-- https://bookapi.bignerdranch.com/courses.json -->
+    <style type="text/css">
+		.panel-default h5{
+			margin: 5px 0 -10px 10px;
+		}
+		.panel-default{
+			background: #ccc;
+		}
+		 a.active {
+
+        color: #fff;
+        font-weight: bold;
+
+    }
+
+    .gridStyle {
+        border: 1px solid #999;
+        width: 200px;
+        height: 200px;
+    }
+
+
+
+    </style>
+  
+</head>
+
+
+
+<body ng-app="myApp">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation">
+                        <a href="#siteMap" role="tab" data-toggle="tab">siteMap</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#pageNotes" role="tab" data-toggle="tab">pageNotes</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="siteMap" ng-controller="ctrl1">
+
+                            <button class="btn btn-default" id="dropdown1"  role="toggle" style="display: block;margin: 10px;" ng-click="click()">Show links</button>
+
+                            <div id="dropdown-menu1" style="display: none">
+                            	
+                            
+
+                                <div class="panel panel-default">
+                                	
+                                    <h5>
+                                    	
+                                        Links to mainPage
+                                    </h5>
+                                    
+                                    <div class="panel-body">
+                                        <p>with sitemap</p>
+                                        <input type="text" name="" class="form-control" value="input1">
+                                        <p>without sitemap</p>
+                                        <input type="text" name="" class="form-control" value="input2">
+                                    </div>
+                                </div>
+                                    <div class="panel panel-default">
+                                        <h5>variable options</h5>
+                                        <div class="panel-body">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">
+<input type="radio" name="">
+                                                </div>
+                                                <input type="text" name="" class="form-control" disabled value="page">
+                                            </div>
+                                        </div>
+                                    </div>
+                               
+                            </div>
+
+
+                        <ul class="list-group" id='list-group1' >
+                            <li class="list-group-item" >
+
+                            <a ng-click="aClick($event)" ui-sref="main" ui-sref-active="active">main</a></li>
+                            <li class="list-group-item" ><a  ng-click="aClick($event)"ui-sref="details" ui-sref-active="active">details</a></li>
+                            <li class="list-group-item" ><a ng-click="aClick($event)" ui-sref="new" ui-sref-active="active">new</a></li>
+                        </ul>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="pageNotes">
+                        mainPage
+                    </div>
+                </div>
+                
+            </div>
+            <div class=" col-md-8">
+<div ui-view="">111</div>
+
+<div ng-controller="ctrl2" >
+	
+	<div ui-grid="gridOptions" class="gridStyle"></div>
+</div>
+
+                </div>
+        </div>
+        </div>
+
+</body>
+<script type="text/javascript">
+var app=angular.module('myApp', ['ui.router','ui.grid'])
+app.config(['$stateProvider', function ($stateProvider) {
+	$stateProvider.state(
+		"main",{
+			url:'/main1',
+			templateUrl:'main.html'
+		})
+	.state(
+		"details",{
+			url:'/details1',
+			templateUrl:'details.html'
+		})
+	.state(
+		"new",{
+			url:'/new1',
+			templateUrl:'new.html'
+		})
+}])
+app.controller('ctrl1', ['$scope', function ($scope) {
+	$scope.aClick=function(e) {
+
+
+		$(e.target).parent().css('background','#04a')
+		$(e.target).parent().siblings().css('background','#fff')
+	};
+	$scope.click=function() {
+		$('#dropdown-menu1').slideToggle("fast");
+	};
+	
+}])
+
+  app.controller('ctrl2', ['$scope','$http', function($scope, $http) {
+        $http.get("courses.json").success(function(response) {
+
+            $scope.mydata = angular.fromJson(response.courses)
+            console.log($scope.mydata);
+        }).error(function(data,status,hedaers,config) {
+        	alert(status)
+        	/* Act on the event */
+        });
+        $scope.gridOptions = {
+            data: 'mydata'
+        }
+        $scope.myData1 = [{ name: "Moroni", age: 50 },
+        { name: "Tiancum", age: 43 },
+        { name: "Jacob", age: 27 },
+        { name: "Nephi", age: 29 },
+        { name: "Enos", age: 34 }
+    ];
+
+    $scope.gridOptions1 = { data: 'myData1' }
+
+    }])
+	
+</script>
+
+</html>
