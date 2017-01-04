@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+   
+<div id="demo">{{fullName}} {{date}}
+<li v-for='item in comments'>
+    {{item+'d'+item1}}
+</li>
+</div>
+<div id="example-2">
+  <!-- `greet` 是在下面定义的方法名 -->
+  <button v-on:click="greet">Greet</button>
+</div>
+
+</body>
+<script type="text/javascript">
+var example2 = new Vue({
+  el: '#example-2',
+  data: {
+    name: 'Vue.js'
+  },
+  // 在 `methods` 对象中定义方法
+  methods: {
+    greet: function (event) {
+      // `this` 在方法里指当前 Vue 实例
+      alert('Hello ' + this.name + '!')
+      // `event` 是原生 DOM 事件
+
+      alert(event.target.tagName)
+    }
+  }
+})
+
+
+
+
+
+var vm = new Vue({
+  el: '#demo',
+  data: {
+    firstName: 'Foo',
+    lastName: 'Bar',
+    comments:[1,2],
+    comments1:[3,4]
+  },
+  computed: {
+    fullName: function () {
+      return this.firstName + ' ' + this.lastName
+    },
+     date: function() {
+                return new Date(111 * 1000)
+            }
+  }
+})
+
+</script>
+
+</html>

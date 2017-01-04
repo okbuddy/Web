@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- axios@0.12.0 -->
+    <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+    <!-- lodash@4.13.1 -->
+    <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+    <style type="text/css">
+        * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    @keyframes key1 {
+        0% {
+            opacity: 0.2;
+        }
+        100% {
+            opacity: 0.9;
+        }
+    }
+    
+    body {
+        background: #eee;
+    }
+    
+    .container {
+        background: #fff;
+        padding: 0;
+    }
+    
+    .div1 {
+        background: #0ff;
+    }
+    
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding-left: 2px;
+    }
+    
+    .section {
+        background: #13acff;
+        color: #fff;
+        font-size: 120%;
+        /* font-weight: bold; */
+        padding-left: 20px;
+    }
+    
+    .section:last-of-type:hover {
+        opacity: 0.8;
+    }
+    
+    .section:last-of-type:active {
+        background: #2175ff;
+    }
+    
+    .arrow {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        animation: key1 2.5s ease-in alternate infinite;
+    }
+    
+    .little-arrow {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+    
+    .turn-up {
+        transform: rotate(-180deg);
+    }
+    
+    .list-group-item:last-child,
+    .list-group-item:first-child {
+        border-radius: 0;
+    }
+    
+    .list-group-item .avatar {
+        position: absolute;
+        top: 0;
+        left: -34px;
+        width: 34px;
+        /* max-width: 100%; */
+        border-radius: 50%;
+    }
+    
+    .list-group-item .avatar:hover {
+        opacity: 0.7;
+    }
+    
+    .nameline {
+        height: 30px;
+        line-height: 30px;
+    }
+    
+    .light {
+        color: #aaa;
+        font-weight: lighter;
+        font-size: 90%;
+    }
+    
+    .icon {
+        color: #aaa;
+        float: right;
+        font-size: 100%;
+        margin: 7px 3px 7px;
+        cursor: pointer;
+    }
+    
+    .content {
+        max-height: 100px;
+        overflow: hidden;
+    }
+    .content p{margin-bottom: 0;}
+    .time-line{margin-top: 5px;}
+    .count {
+        font-size: 90%;
+        float: right;
+        color: #aaa;
+        padding-left: 1px;
+    }
+    
+    .unfold {
+        float: right;
+        background: #eee;
+        border-radius: 3px;
+        padding: 2px 10px;
+        cursor: pointer;
+    }
+    
+    @media only screen and (min-width: 1080px) {
+        body {
+            font-size: 18px;
+        }
+        .icon {
+            margin-top: 6px;
+        }
+        .list-group-item .avatar {
+            left: -68px;
+            width: 68px;
+        }
+    </style>
+</head>
+<!-- font-face -->
+
+<body>
+    <div class="container" id='myApp'>
+        <ul class="list-group">
+            <li class="list-group-item section">{{storyExtra.long_comments+" 条 长 评"}}</li>
+            <li class="list-group-item" v-for="(item,index) in comments">
+                <div class="row">
+                    <div class="col-xs-offset-2 col-xs-10 col-sm-offset-1 col-sm-11">
+                        <img class="avatar" :src='item.avatar' data-toggle="popover" data-placement="right" data-html='true' data-trigger='hover click' data-content="">
+                        <div class="nameline">
+                            <b>{{item.author}}</b>
+                            <span class="count">{{item.likes}}</span>
+                            <span :id="'comment'+index" class="glyphicon glyphicon-thumbs-up icon" @click.stop='like(item,index,$event)'></span>
+                        </div>
+                        <div class='content' :style="{maxHeight:item.pMaxH}">
+                            <p>{{item.content}}</p>
+                        </div>
+                        <div class="time-line">
+                            <time class="light">{{date(item)}}</time>
+                            <span class="unfold" @click.stop='unfoldOrfold(item)'>{{item.foldTrigger}}</span></div>
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item section" @click.stop='turnUpOrDown'>{{storyExtra.short_comments+" 条 短 评"}}
+                <canvas id='little-arrow1' :class="['little-arrow',{'turn-up':isUp}]" width="26" height="24"></canvas>
+                <canvas id='little-arrow2' :class="['little-arrow',{'turn-up':isUp}]" @click.stop='turnUpOrDown' width="36" height="32"></canvas>
+            </li>
+            <div v-show="seen">
+                <li class="list-group-item" v-for="(shortItem,index) in shortComments">
+                    <div class="row">
+                        <div class="col-xs-offset-2 col-xs-10 col-sm-offset-1 col-sm-11">
+                            <img class="avatar" :src='shortItem.avatar'>
+                            <div class="nameline">
+                                <b>{{shortItem.author}}</b><span class="count">{{shortItem.likes}}</span> <span :id="'comment'+(storyExtra.long_comments+index)" class="glyphicon glyphicon-thumbs-up icon" @click.stop='like(shortItem,storyExtra.long_comments+index)'></span></div>
+                            <p>{{shortItem.content}}</p>
+                            <div>
+                                <time class="light">{{date(shortItem)}}</time>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </ul>
+    </div>
+    <canvas id='arrow' class="arrow" width="100" height="90"></canvas>
+    <script type="text/javascript">
+    var app = new Vue({
+        el: '#myApp',
+        data: {
+            storyExtra: {},
+            comments: [],
+            shortComments: [],
+
+            isUp: false,
+            seen: false,
+
+            a: 10
+
+        },
+        methods: {
+            date: function(item) {
+                var d = new Date(item.time)
+                return d.dateFormat('MM-dd hh:mm')
+            },
+            turnUpOrDown: function() {
+                this.isUp = !(this.isUp)
+                this.seen = !(this.seen)
+            },
+            like: function(item, index, e) {
+                if (item.isLiked == undefined) {
+                    item.isLiked = false
+                }
+                item.isLiked = !item.isLiked
+                var $likedComment = $('#comment' + index)
+                var $number = $likedComment.prev()
+                item.isLiked ? (item.likes += 1, $likedComment.css('color', '#13ACFF'), $number.css('color', '#13ACFF')) : (item.likes -= 1, $likedComment.css('color', '#aaa'), $number.css('color', '#aaa'));
+                //badge rise
+                if (item.isLiked) {
+
+                    var badge = $("<span class='badge'>+1</span>")
+                    $('body').append(badge)
+                    var w = 24,
+                        h = 16
+                    badge.css({
+                        'opacity': '1',
+                        'width': w + 'px',
+                        'height': h + 'px',
+
+                        'position': 'absolute',
+                        'top': (e.pageY - h) + 'px',
+                        'left': (e.pageX - w / 2) + 'px',
+
+                        'background': '#0ff'
+
+                    })
+                    badge.animate({
+                        top: '-=60px',
+                        opacity: '0'
+
+                    }, 600, function() {
+                        badge.remove()
+                    })
+
+                }
+
+
+            },
+            unfoldOrfold: function(item) {
+                //item.likes+=100
+                var a = item.pMaxH
+                a == '100px' ? (item.foldTrigger = '收起', item.pMaxH = 'none') : (item.foldTrigger = '展开', item.pMaxH = '100px')
+            }
+
+
+        },
+        computed: {
+            b: function() {
+                return 2 * this.a
+            }
+
+        },
+        watch: {
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+    })
+    Date.prototype.dateFormat = function(fmt) {
+
+        var list = {
+            'M': this.getMonth() + 1,
+            'd': this.getDate(),
+            'h': this.getHours(),
+            'm': this.getMinutes(),
+            's': this.getSeconds()
+        }
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length))
+        };
+
+        for (var item in list) {
+            if (new RegExp("(" + item + "+)").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? list[item] : ('00' + list[item]).substr(('' + list[item]).length))
+            }
+        }
+        var ms = this.getMilliseconds();
+        if  (new  RegExp("(S+)").test(fmt))     fmt  =  fmt.replace(RegExp.$1,   (RegExp.$1.length  ==  1)  ?  (ms)       :  (("000"  +  ms).substr((""  +  ms).length)));  
+        return fmt;
+
+
+    }
+
+    axios.get('comments.json').then(function(response) {
+        var arr = response.data.comments;
+        for (var i = 0; i < arr.length; i++) {
+            arr[i].foldTrigger = '展开'
+            arr[i].pMaxH = '100px'
+        };
+        app.comments = arr
+
+
+    }).catch(function(err) {
+        console.log('get error:%s', err)
+    })
+
+    axios.get('short-comments.json').then(function(response) {
+        app.shortComments = response.data.comments;
+    }).catch(function(err) {
+        console.log('get error:%s', err)
+    })
+
+    axios.get('story-extra.json').then(function(response) {
+        app.storyExtra = response.data;
+        for (var i = 0; i < app.storyExtra.long_comments; i++) {
+            var content = $('#comment' + i).parent().next().children(':first')
+            if (content.height() < 110) {
+                content.parent().next().children('.unfold').hide()
+            }
+        };
+    }).catch(function(err) {
+        console.log('get error:%s', err)
+    })
+
+
+    $(function() {
+        var popoverSet = setInterval(function() {
+            var popover = $("[data-toggle='popover']")
+            if (popover.length != 0) {
+                popover.popover();
+                clearInterval(popoverSet)
+                popover.each(function() {
+                    var imgsrc = $(this).attr('src')
+                    $(this).attr('data-content', "<img style='width:70px;height:70px;' src='" + imgsrc + "'/>")
+                    $(this).on('click', function(e) {
+                        e.stopPropagation();
+                        e.cancellBubble()
+                    })
+                })
+
+
+            }
+
+        }, 500)
+
+
+
+        if (window.innerWidth > 1080) {
+            $('#little-arrow1').hide();
+            $('#little-arrow2').show()
+        } else {
+            $('#little-arrow1').show();
+            $('#little-arrow2').hide()
+        }
+        window.onresize = function() {
+            if (window.innerWidth > 1080) {
+                $('#little-arrow1').hide();
+                $('#little-arrow2').show()
+            } else {
+                $('#little-arrow1').show();
+                $('#little-arrow2').hide()
+            }
+
+            for (var i = 0; i < app.storyExtra.long_comments; i++) {
+                var content = $('#comment' + i).parent().next().children(':first')
+                if (content.height() < 110) {
+                    content.parent().next().children('.unfold').hide()
+                } else {
+                    content.parent().next().children('.unfold').show()
+                }
+
+            }
+        }
+        $(document).click(function(e) {
+            var w = 70;
+            drawBubble(w);
+
+            function drawBubble(width) {
+                var ring = $('<div></div>')
+                $('body').append(ring)
+
+                ring.css({
+                    'opacity': '0.4',
+                    'width': w / 4 + 'px',
+                    'height': w / 4 + 'px',
+                    'border-radius': '50%',
+                    'position': 'absolute',
+                    'top': (e.pageY - 1 - w / 4 / 2) + 'px',
+                    'left': (e.pageX - 1 - w / 4 / 2) + 'px',
+                    'border': '1px solid #0ff',
+                    'background': '#0ff'
+
+                })
+                ring.animate({
+                    opacity: '0',
+                    width: w + 'px',
+                    height: w + 'px',
+                    top: (e.pageY - 1 - w / 2) + 'px',
+                    left: (e.pageX - 1 - w / 2) + 'px'
+                }, 700, function() {
+                    ring.remove()
+
+                })
+            }
+
+
+        })
+    })
+    var c1 = document.getElementById('arrow');
+    var ctx1 = c1.getContext('2d')
+    drawArrow(ctx1, '#0ff', 5)
+    var arrow1 = document.getElementById('little-arrow1');
+    var ctxa1 = arrow1.getContext('2d')
+    drawArrow(ctxa1, '#fff', 1)
+    var arrow2 = document.getElementById('little-arrow2');
+    var ctxa2 = arrow2.getContext('2d')
+    drawArrow(ctxa2, '#fff', 1)
+
+
+    function drawArrow(ctx, color, lineWidth) {
+        var w = ctx.canvas.width,
+            h = ctx.canvas.height
+        ctx.beginPath();
+        ctx.moveTo(w / 5, h / 6);
+        ctx.lineTo(w / 2, h / 2);
+        ctx.lineTo(4 * w / 5, h / 6);
+        ctx.moveTo(w / 5, h / 2);
+        ctx.lineTo(w / 2, 5 * h / 6);
+        ctx.lineTo(4 * w / 5, h / 2);
+
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = color;
+
+        ctx.stroke();
+    }
+    </script>
+</body>
+
+</html>
