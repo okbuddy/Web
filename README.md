@@ -1,1 +1,1 @@
-run h1/h1 or h2/h2(in progress)
+run h1/h1  h2/h2(in progress)  h3/h3 h3/comments(in progress)
