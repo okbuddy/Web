@@ -16,7 +16,7 @@
     <!-- lodash@4.13.1 -->
     <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
     <style type="text/css">
-        * {
+    * {
         margin: 0;
         padding: 0;
     }
@@ -48,6 +48,10 @@
     
     .div1 {
         background: #0ff;
+    }
+    
+    .list-group {
+        margin-bottom: 100px;
     }
     
     .list-group-item {
@@ -131,8 +135,15 @@
         max-height: 100px;
         overflow: hidden;
     }
-    .content p{margin-bottom: 0;}
-    .time-line{margin-top: 5px;}
+    
+    .content p {
+        margin-bottom: 0;
+    }
+    
+    .time-line {
+        margin-top: 5px;
+    }
+    
     .count {
         font-size: 90%;
         float: right;
@@ -148,6 +159,30 @@
         cursor: pointer;
     }
     
+    .input-container {
+        border-radius: 10px 10px 0 0;
+        background: #fff;
+        border: 1px solid #aaa;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+    }
+    
+    .input {
+        margin: 5px 10px 5px 15px;
+        border: none;
+        border-bottom: 1px solid #aaa;
+        /* max-height: 100px; */
+        height: 30px;
+        line-height: 30px;
+        resize: none;
+    }
+    
+    .publish {
+        position: absolute;
+        bottom: 5px;
+    }
+    
     @media only screen and (min-width: 1080px) {
         body {
             font-size: 18px;
@@ -159,6 +194,11 @@
             left: -68px;
             width: 68px;
         }
+        .input {
+            margin-top: 10px;
+        }
+        .publish {}
+    }
     </style>
 </head>
 <!-- font-face -->
@@ -173,11 +213,17 @@
                         <img class="avatar" :src='item.avatar' data-toggle="popover" data-placement="right" data-html='true' data-trigger='hover click' data-content="">
                         <div class="nameline">
                             <b>{{item.author}}</b>
-                            <span class="count">{{item.likes}}</span>
-                            <span :id="'comment'+index" class="glyphicon glyphicon-thumbs-up icon" @click.stop='like(item,index,$event)'></span>
+                            <span class="count" :style="{color:item.color}">{{item.likes}}</span>
+                            <span :id="'comment'+(comments.length-index-1)" :style="{color:item.color}" class="glyphicon glyphicon-thumbs-up icon" @click.stop='like(item,(comments.length-index-1),$event)'></span>
                         </div>
                         <div class='content' :style="{maxHeight:item.pMaxH}">
-                            <p>{{item.content}}</p>
+                            <p>{{item.content}}
+                            <span v-if='item.reply_to!=undefined'>
+                            
+                            <br/><b>{{('//'+item.reply_to.author+':')}}</b><span style='color:#666'>&nbsp&nbsp{{item.reply_to.content}}</span>
+                                
+                            </span>
+                            </p>
                         </div>
                         <div class="time-line">
                             <time class="light">{{date(item)}}</time>
@@ -185,7 +231,7 @@
                     </div>
                 </div>
             </li>
-            <li class="list-group-item section" @click.stop='turnUpOrDown'>{{storyExtra.short_comments+" 条 短 评"}}
+            <li class="list-group-item section" @click.stop='turnUpOrDown'>{{storyExtra.short_comments+" 条 短 评"}}<span v-show='!seen' style="font-weight: lighter">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp点击可见</span>
                 <canvas id='little-arrow1' :class="['little-arrow',{'turn-up':isUp}]" width="26" height="24"></canvas>
                 <canvas id='little-arrow2' :class="['little-arrow',{'turn-up':isUp}]" @click.stop='turnUpOrDown' width="36" height="32"></canvas>
             </li>
@@ -193,10 +239,14 @@
                 <li class="list-group-item" v-for="(shortItem,index) in shortComments">
                     <div class="row">
                         <div class="col-xs-offset-2 col-xs-10 col-sm-offset-1 col-sm-11">
-                            <img class="avatar" :src='shortItem.avatar'>
+                            
+                            <img class="avatar" :src='shortItem.avatar' data-toggle="popover" data-placement="right" data-html='true' data-trigger='hover click' data-content="">
                             <div class="nameline">
-                                <b>{{shortItem.author}}</b><span class="count">{{shortItem.likes}}</span> <span :id="'comment'+(storyExtra.long_comments+index)" class="glyphicon glyphicon-thumbs-up icon" @click.stop='like(shortItem,storyExtra.long_comments+index)'></span></div>
-                            <p>{{shortItem.content}}</p>
+                                <b>{{shortItem.author}}</b><span class="count" :style="{color:shortItem.color}">{{shortItem.likes}}</span> <span :id="'comment'+(storyExtra.long_comments+(shortComments.length-index-1))" class="glyphicon glyphicon-thumbs-up icon" :style="{color:shortItem.color}"@click.stop='like(shortItem,storyExtra.long_comments+(shortComments.length-index-1),$event)' ></span></div>
+                            <p>{{shortItem.content}}
+                             <span v-if='shortItem.reply_to!=undefined'>
+                          
+                            <br/><b>{{('//'+shortItem.reply_to.author+':')}}</b><span style='color:#666'>&nbsp&nbsp{{shortItem.reply_to.content}}</span></p>
                             <div>
                                 <time class="light">{{date(shortItem)}}</time>
                             </div>
@@ -205,10 +255,18 @@
                 </li>
             </div>
         </ul>
+        <div class="input-container">
+            <textarea class="input" :style="{overflow: inputOverflow}" @focus.stop='focus' @click.stop='inputClick' @keyup='keyup' @blur='blur1' v-model='myComment' placeholder="say something"></textarea>
+            <button class="btn btn-info publish" @click.stop='publish'>发表</button>
+        </div>
     </div>
     <canvas id='arrow' class="arrow" width="100" height="90"></canvas>
-    <script type="text/javascript">
-    var app = new Vue({
+</body>
+<script type="text/javascript">
+//vue app
+
+
+var app = new Vue({
         el: '#myApp',
         data: {
             storyExtra: {},
@@ -217,13 +275,14 @@
 
             isUp: false,
             seen: false,
-
+            inputOverflow: 'hidden',
+            myComment: '',
             a: 10
 
         },
         methods: {
             date: function(item) {
-                var d = new Date(item.time)
+                var d = new Date(item.time * 1000)
                 return d.dateFormat('MM-dd hh:mm')
             },
             turnUpOrDown: function() {
@@ -235,9 +294,9 @@
                     item.isLiked = false
                 }
                 item.isLiked = !item.isLiked
-                var $likedComment = $('#comment' + index)
-                var $number = $likedComment.prev()
-                item.isLiked ? (item.likes += 1, $likedComment.css('color', '#13ACFF'), $number.css('color', '#13ACFF')) : (item.likes -= 1, $likedComment.css('color', '#aaa'), $number.css('color', '#aaa'));
+                // var $likedComment = $('#comment' + index)
+                // var $number = $likedComment.prev()
+                item.isLiked ? (item.likes += 1, item.color='#13ACFF') : (item.likes -= 1, item.color='#aaa');
                 //badge rise
                 if (item.isLiked) {
 
@@ -273,6 +332,117 @@
                 //item.likes+=100
                 var a = item.pMaxH
                 a == '100px' ? (item.foldTrigger = '收起', item.pMaxH = 'none') : (item.foldTrigger = '展开', item.pMaxH = '100px')
+            },
+            focus: function(event) {
+                var input = $(event.target);
+                if (window.innerWidth < 800) {
+                    // var keyboardHeight = screen.height - window.innerHeight;
+
+                    $('.input-container').css('bottom', '200px');
+                    var h = input[0].scrollHeight;
+                    if (h < 100) {
+                        input.css('height', h)
+                    } else {
+                        input.css('height', 100)
+                    };
+
+
+                } else {
+                    this.inputOverflow = 'auto'
+                    input.animate({
+                            height: '200px',
+                        },
+                        500,
+                        function() {
+                            /* stuff to do after animation is complete */
+                        });
+                }
+
+            },
+            inputClick: function() {
+                console.log('input click');
+            },
+            keyup: function() {
+                if (window.innerWidth < 800) {
+                    var input = $('.input')
+                    var h = input[0].scrollHeight;
+                    if (h < 100) {
+                        this.inputOverflow = 'hidden'
+                        input.height(h)
+
+                    } else {
+                        this.inputOverflow = 'scroll'
+                    }
+                } else {
+                    this.inputOverflow = 'scroll'
+                };
+            },
+            f1:function  () {
+                console.log('log f1')
+            },
+            blur1: function(event) {
+                var input = $(event.target);
+
+                if (window.innerWidth < 800) {
+                    // var keyboardHeight = screen.height - window.innerHeight;
+                    $('.input-container').delay('fast').animate({bottom:'0'},'fast',function  () {
+                        app.f1()
+                        console.log(this.tagName)
+                    });
+                    this.inputOverflow = 'hidden'
+                    input.animate({
+                            height: '30px',
+                        },
+                        500)
+
+                } else {
+
+                    input.animate({
+                            height: '30px',
+                        },
+                        500,
+                        function() {
+                            /* stuff to do after animation is complete */
+                        });
+                    this.inputOverflow = 'auto'
+
+
+                };
+            },
+            publish: function() {
+                if (this.myComment == '') {
+                    return
+                }
+                var date = new Date()
+                var ms = date.getTime() / 1000
+                var comment = {
+                    "author": "funny",
+                    "content": this.myComment,
+                    "avatar": "funny.jpg",
+                    "time": ms,
+                    "id": 0,
+                    "likes": 0
+                }
+                if (this.myComment.length > 50) {
+                    comment.foldTrigger = 'mine'
+                    comment.pMaxH = 'none'
+                    this.comments.splice(0, 0, comment)
+                    this.storyExtra.long_comments += 1
+
+                } else {
+                    this.shortComments.splice(0, 0, comment)
+                    this.storyExtra.short_comments += 1
+
+
+                };
+                //data update
+                app.storyExtra.comments+=1
+                //then view update
+                //wait render to set bootstrap popover 
+        this.$nextTick(popover)
+                this.myComment = ''
+
+
             }
 
 
@@ -298,7 +468,8 @@
 
 
     })
-    Date.prototype.dateFormat = function(fmt) {
+    //Date format(yyyy-MM-dd or other)
+Date.prototype.dateFormat = function(fmt) {
 
         var list = {
             'M': this.getMonth() + 1,
@@ -322,30 +493,40 @@
 
 
     }
+    //http get data
+axios.get('comments.json').then(function(response) {
+    var arr = response.data.comments;
+    for (var i = 0; i < arr.length; i++) {
+        arr[i].foldTrigger = '展开'
+        arr[i].pMaxH = '100px'
+        arr[i].color='#aaa'
+    };
+    app.comments = arr
+    Vue.nextTick(popover)
 
-    axios.get('comments.json').then(function(response) {
-        var arr = response.data.comments;
-        for (var i = 0; i < arr.length; i++) {
-            arr[i].foldTrigger = '展开'
-            arr[i].pMaxH = '100px'
-        };
-        app.comments = arr
+}).catch(function(err) {
+    console.log('get error:%s', err)
+})
+
+axios.get('short-comments.json').then(function(response) {
+    var arr = response.data.comments;
+     for (var i = 0; i < arr.length; i++) {
 
 
-    }).catch(function(err) {
-        console.log('get error:%s', err)
-    })
+        arr[i].color='#aaa'
+    };
+    app.shortComments=arr
+        Vue.nextTick(popover)
 
-    axios.get('short-comments.json').then(function(response) {
-        app.shortComments = response.data.comments;
-    }).catch(function(err) {
-        console.log('get error:%s', err)
-    })
+}).catch(function(err) {
+    console.log('get error:%s', err)
+})
 
-    axios.get('story-extra.json').then(function(response) {
+axios.get('story-extra.json').then(function(response) {
         app.storyExtra = response.data;
         for (var i = 0; i < app.storyExtra.long_comments; i++) {
             var content = $('#comment' + i).parent().next().children(':first')
+                //determine whether to display 展开
             if (content.height() < 110) {
                 content.parent().next().children('.unfold').hide()
             }
@@ -353,30 +534,46 @@
     }).catch(function(err) {
         console.log('get error:%s', err)
     })
+    //set popover
+    function popover() {
+    var popover = $("[data-toggle='popover']")
+ popover.popover();
+
+        popover.each(function() {
+            var imgsrc = $(this).attr('src')
+            $(this).attr('data-content', "<img style='width:70px;height:70px;' src='" + imgsrc + "'/>")
+            $(this).on('click', function(e) {
+                e.stopPropagation();
+
+            })
+        })
+
+    }
 
 
-    $(function() {
-        var popoverSet = setInterval(function() {
-            var popover = $("[data-toggle='popover']")
-            if (popover.length != 0) {
-                popover.popover();
-                clearInterval(popoverSet)
-                popover.each(function() {
-                    var imgsrc = $(this).attr('src')
-                    $(this).attr('data-content', "<img style='width:70px;height:70px;' src='" + imgsrc + "'/>")
-                    $(this).on('click', function(e) {
-                        e.stopPropagation();
-                        e.cancellBubble()
-                    })
-                })
+    //jQuery ready: onload onresize on..
+$(function() {
+    //onload
 
+    var containerW = $('.container').width()
+    $('.input-container').width(containerW)
+    $('.input').width(containerW - 86)
 
-            }
-
-        }, 500)
-
-
-
+    //arrow size
+    if (window.innerWidth > 1080) {
+        $('#little-arrow1').hide();
+        $('#little-arrow2').show()
+    } else {
+        $('#little-arrow1').show();
+        $('#little-arrow2').hide()
+    }
+    //window resize
+    window.onresize = function() {
+        //resize input-container
+        var containerW = $('.container').width()
+        $('.input-container').width(containerW)
+        $('.input').width(containerW - 86)
+            //resize arrow size
         if (window.innerWidth > 1080) {
             $('#little-arrow1').hide();
             $('#little-arrow2').show()
@@ -384,90 +581,89 @@
             $('#little-arrow1').show();
             $('#little-arrow2').hide()
         }
-        window.onresize = function() {
-            if (window.innerWidth > 1080) {
-                $('#little-arrow1').hide();
-                $('#little-arrow2').show()
+        //determine show/hide unfold
+        for (var i = 0; i < app.storyExtra.long_comments; i++) {
+            var content = $('#comment' + i).parent().next().children(':first')
+            if (content.height() < 110) {
+                content.parent().next().children('.unfold').hide()
             } else {
-                $('#little-arrow1').show();
-                $('#little-arrow2').hide()
+                content.parent().next().children('.unfold').show()
             }
 
-            for (var i = 0; i < app.storyExtra.long_comments; i++) {
-                var content = $('#comment' + i).parent().next().children(':first')
-                if (content.height() < 110) {
-                    content.parent().next().children('.unfold').hide()
-                } else {
-                    content.parent().next().children('.unfold').show()
-                }
-
-            }
         }
-        $(document).click(function(e) {
-            var w = 70;
-            drawBubble(w);
-
-            function drawBubble(width) {
-                var ring = $('<div></div>')
-                $('body').append(ring)
-
-                ring.css({
-                    'opacity': '0.4',
-                    'width': w / 4 + 'px',
-                    'height': w / 4 + 'px',
-                    'border-radius': '50%',
-                    'position': 'absolute',
-                    'top': (e.pageY - 1 - w / 4 / 2) + 'px',
-                    'left': (e.pageX - 1 - w / 4 / 2) + 'px',
-                    'border': '1px solid #0ff',
-                    'background': '#0ff'
-
-                })
-                ring.animate({
-                    opacity: '0',
-                    width: w + 'px',
-                    height: w + 'px',
-                    top: (e.pageY - 1 - w / 2) + 'px',
-                    left: (e.pageX - 1 - w / 2) + 'px'
-                }, 700, function() {
-                    ring.remove()
-
-                })
-            }
-
-
-        })
-    })
-    var c1 = document.getElementById('arrow');
-    var ctx1 = c1.getContext('2d')
-    drawArrow(ctx1, '#0ff', 5)
-    var arrow1 = document.getElementById('little-arrow1');
-    var ctxa1 = arrow1.getContext('2d')
-    drawArrow(ctxa1, '#fff', 1)
-    var arrow2 = document.getElementById('little-arrow2');
-    var ctxa2 = arrow2.getContext('2d')
-    drawArrow(ctxa2, '#fff', 1)
-
-
-    function drawArrow(ctx, color, lineWidth) {
-        var w = ctx.canvas.width,
-            h = ctx.canvas.height
-        ctx.beginPath();
-        ctx.moveTo(w / 5, h / 6);
-        ctx.lineTo(w / 2, h / 2);
-        ctx.lineTo(4 * w / 5, h / 6);
-        ctx.moveTo(w / 5, h / 2);
-        ctx.lineTo(w / 2, 5 * h / 6);
-        ctx.lineTo(4 * w / 5, h / 2);
-
-        ctx.lineWidth = lineWidth;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-
-        ctx.stroke();
     }
-    </script>
+
+    //show circle
+    $(document).click(function(e) {
+        //hide popover
+        $("[data-toggle='popover']").popover('hide')
+            //add ring
+        var w = 70;
+        drawBubble(w);
+
+        function drawBubble(width) {
+            var ring = $('<div></div>')
+            $('body').append(ring)
+
+            ring.css({
+                'opacity': '0.4',
+                'width': w / 4 + 'px',
+                'height': w / 4 + 'px',
+                'border-radius': '50%',
+                'position': 'absolute',
+                'top': (e.pageY - 1 - w / 4 / 2) + 'px',
+                'left': (e.pageX - 1 - w / 4 / 2) + 'px',
+                'border': '1px solid #0ff',
+                'background': '#0ff'
+
+            })
+            ring.animate({
+                opacity: '0',
+                width: w + 'px',
+                height: w + 'px',
+                top: (e.pageY - 1 - w / 2) + 'px',
+                left: (e.pageX - 1 - w / 2) + 'px'
+            }, 700, function() {
+                ring.remove()
+
+            })
+        }
+
+
+    })
+})
+
+//paint arrow on the canvas
+var c1 = document.getElementById('arrow');
+var ctx1 = c1.getContext('2d')
+drawArrow(ctx1, '#0ff', 5)
+var arrow1 = document.getElementById('little-arrow1');
+var ctxa1 = arrow1.getContext('2d')
+drawArrow(ctxa1, '#fff', 1)
+var arrow2 = document.getElementById('little-arrow2');
+var ctxa2 = arrow2.getContext('2d')
+drawArrow(ctxa2, '#fff', 1)
+
+
+function drawArrow(ctx, color, lineWidth) {
+    var w = ctx.canvas.width,
+        h = ctx.canvas.height
+    ctx.beginPath();
+    ctx.moveTo(w / 5, h / 6);
+    ctx.lineTo(w / 2, h / 2);
+    ctx.lineTo(4 * w / 5, h / 6);
+    ctx.moveTo(w / 5, h / 2);
+    ctx.lineTo(w / 2, 5 * h / 6);
+    ctx.lineTo(4 * w / 5, h / 2);
+
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = color;
+
+    ctx.stroke();
+}
+</script>
 </body>
 
 </html>

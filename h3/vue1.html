@@ -11,20 +11,26 @@
    
 <div id="demo">{{fullName}} {{date}}
 <li v-for='item in comments'>
-    {{item+'d'+item1}}
+    {{item}}
 </li>
 </div>
+
+
 <div id="example-2">
   <!-- `greet` 是在下面定义的方法名 -->
-  <button v-on:click="greet">Greet</button>
+  <button v-on:click="greet">Greet{{rawhtml}}</button>
+  <<div v-html='rawhtml' v-if='a==34'></div>
 </div>
 
 </body>
+
 <script type="text/javascript">
 var example2 = new Vue({
   el: '#example-2',
   data: {
-    name: 'Vue.js'
+    name: 'Vue.js',
+    rawhtml:'<br>\n\n<b>11\n\nsss</b>',
+    a:32
   },
   // 在 `methods` 对象中定义方法
   methods: {
@@ -47,8 +53,8 @@ var vm = new Vue({
   data: {
     firstName: 'Foo',
     lastName: 'Bar',
-    comments:[1,2],
-    comments1:[3,4]
+    comments:[1,2]
+
   },
   computed: {
     fullName: function () {

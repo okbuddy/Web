@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="baidu.css">
     <script src="https://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
     <!-- angular -->
@@ -29,50 +28,68 @@
         height: 100%;
         width: 100%;
     }
-    
-    .div1 {
-       height: 50px;
-       /* overflow: hidden; */
-    }
-    img{height: 30px;width: 30px;}
-table{
-	width: 100%;
-}
-table td{
-	text-align: center;
-}
-ul{
-	background: red;width: 100%;
-}
-textarea{
-height: 300px;
-}
-input{
-	width: 300px;	
-	height: 200px;	
-}
-p{
-line-height: 30px;
-}
     </style>
     <script type="text/javascript">
-	    $('body').on('load',function() {
+    $(function() {
+        var input = $('textarea')
+        $('textarea').on('keyup', function() {
+            var h = $('textarea')[0].scrollHeight;
+            input.height(h)
+        })
+    })
 
+    function f1() {
+        console.log(n++)
+    }
+    var set1 = setInterval(f1, 1000)
 
-		alert('load')})
+    function stop() {
+        console.log('stop')
+        clearInterval(set1)
+    }
 
+    function begin() {
+        console.log('begin')
+        set1 = setInterval(f1, 1000)
+    }
+    var n = 0;
+    </script>
+</head>
 
-		// document.onload=function  () {
-		// 	alert('js window')
-		// }
+<body>
+    <div>
+        <button onclick="begin()">begin</button>
+        <button onclick="stop()">stop</button>
+    </div>
+    <textarea onblur="blur1(event)" onfocus="focus1()"></textarea>
+    <input onblur="myFunction()" onfocus="focus1()" type="text"></input>
+    <script type="text/javascript">
+    function blur1(e) {
+        console.log('blur1')
+        e.stopPropagation()
+        console.log(e.target.tagName)
+        e.preventDefault()
+    }
 
-	
+    function focus1() {
+        console.log('focus1')
+    }
+    </script>
+    <input type="button" name="" value='bbbbb'>
+</body>
+<script type="text/javascript">
+function myFunction() {
+    var x = document.getElementById("fname");
+    console.log('blur')
+}
 </script>
 </head>
 
-<body >
-<div><p>11111</p><p>22222</p></div>
+<body>
+<p>1213113<p></p></p>
+    输入你的名字:
+    <input type="text" id="fname" onblur="myFunction()">
+    <p>当你离开输入框, 函数将被触发将输入文字转换成大写。</p>
 </body>
-
 
 </html>
