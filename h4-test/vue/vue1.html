@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!-- bootstrap js-->
+    <script src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!-- vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src='https://unpkg.com/vue-router/dist/vue-router.js'></script>
+    <style type="text/css">
+    a:focus {
+        outline: none;
+    }
+    
+    .router-link-active {
+        color: red !important;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="example-2">
+        <a href="">aaa</a>
+        <h1>hello app</h1>
+        <p>
+            <router-link to='/user/foo'>go to foo</router-link>
+            <router-link to='/user/bar'>go to bar</router-link>
+            <router-link to='/user1/555'>user1+555</router-link>
+            <router-link to='/user1/aaa'>user1+aaa</router-link>
+            <router-link to='/user2/222'>user2/2.2 </router-link>
+            <router-link to='/user2/user2.1/333'>user2/user2.1/3 </router-link>
+            <router-link to='/user3'>user3 </router-link>
+        </p>
+        <router-view name='a'></router-view>
+        <router-view name='b'></router-view>
+        <router-view></router-view>
+    </div>
+</body>
+<script type="text/javascript">
+// const foo={template:'<div>this is foo{{$routes.params.user_id}}</div>'}
+// const bar={template:'<div>this is bar{{$routes.params.user_id}}</div>'}
+const user = {
+    template: '<div>{{$route.params.user_id}}</div>'
+}
+const usera = {
+    template: '<div>userA</div>'
+}
+const userb = {
+    template: '<div>userB</div>'
+}
+const user1 = {
+    template: '<div>number{{$route.params.id}}</div>'
+}
+const user2 = {
+    template: '<div>{{$route.params.name}}</div>'
+}
+const user3 = {
+    template: '<div><p>user3</p><router-link to="/user3/child1">child1</router-link><router-link to="/user3/child2">child2</router-link><router-link to="/user3/child3">child3</router-link><router-view></router-view></div>'
+}
+const child1 = {
+    template: '<div>child1 in user3</div>'
+}
+const child2 = {
+    template: '<div>child2 in user3</div>'
+}
+const routes = [{
+        path: '/user/:user_id',
+        name:'usermany',
+        components: {
+            default: user,
+            a: usera,
+            b: userb
+        }
+    }, {
+        path: '/user1/:id(\\d+)',
+        name:'number',
+        component: user1
+    }, 
+{path:'/user1/:id(\\w+)',redirect:{name:'number'}},
+    {
+        path: '/user2/(user2.1/)?:name',
+        component: user2
+    }, {
+        path: '/user3',
+        component: user3,
+        children: [{
+            path: 'child1',
+            component: child1,
+            alias:'child3'
+        }, {
+            path: 'child2',
+            component: child2
+        }]
+    }
+
+]
+const router = new VueRouter({
+    routes
+})
+const app = new Vue({
+    router
+}).$mount('#example-2')
+</script>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!-- angular -->
+    <script src="/Users/zhk/Desktop/web/node_modules/angular/angular.min.js"></script>
+    <!-- 1.5.0 angular -->
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script> -->
+    <!-- angular-ui-router -->
+    <script src="/Users/zhk/Desktop/web/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <!-- bootstrap js-->
+    <script src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!-- ng-grid -->
+    </script>
+    <script>
+    </script>
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    
+    .div1 {
+
+        width: 100%;
+        overflow-x: scroll;
+    }
+    
+    .div2 {
+        width: 30%;
+        margin: 0 auto;
+        -webkit-perspective: 300px;
+        -moz-perspective: 300px;
+        -ms-perspective: 300px;
+        perspective: 300px;
+    }
+    
+    .img1 {
+        width: 100%;
+        animation: key1 4s both;  
+    }
+    
+    .img2 {
+        width: 100px;
+    }
+
+    .button1{
+        position: absolute;left: 50%;margin-left: 100px;
+        width: 150px;height: 100px;
+        border: 40px solid red;
+        border-top-color: green;
+        border-right-color: blue;
+    }
+    
+    @keyframes key1 {
+        0% {
+            /* transform: rotateY(50deg) translateX(-100px); */
+        }
+        50% {
+            transform: rotateY(50deg) translateX(-100px);
+        }
+        100% {
+            transform: rotateY(-50deg) translateX(100px);
+        }
+
+    }
+    </style>
+    <script type="text/javascript">
+    </script>
+</head>
+
+<body>
+<div id="dg-container" class="dg-container">
+                <div class="dg-wrapper">
+                    <a href="javascript:;" class="" style="opacity: 0.5; visibility: visible; transform: translateX(-250px) translateZ(-200px) rotateY(45deg);"><img src="earth.png" alt="image01"><div>社交名片</div></a>
+                    <a href="javascript:;" class="dg-center" style="opacity: 1; visibility: visible; transform: translateX(0px) translateZ(0px) rotateY(0deg);"><img src="earth.png" alt="image02"><div>个人名片</div></a>
+                    <a href="javascript:;" class="" style="opacity: 0.5; visibility: visible; transform: translateX(250px) translateZ(-200px) rotateY(-45deg);"><img src="earth.png" alt="image03"><div>员工名片</div></a>
+
+                </div>
+                <nav>
+                    <span class="dg-prev">&lt;</span>
+                    <span class="dg-next">&gt;</span>
+                </nav>
+        </div>
+</body>
+<script type="text/javascript" src='jquery.gallery.js'></script>
+<script type="text/javascript">
+    
+    $(function() {
+        $('#dg-container').gallery({
+            autoplay    :   true
+        });
+        $("#bannerbox").hover(function(){
+            $(".arrow-right,.arrow-left").css("display","block");
+        },function(){
+            $(".arrow-right,.arrow-left").css("display","none");
+        })
+    });
+
+
+</script>
+</html>
