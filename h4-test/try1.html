@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+    </div>
+    <button id="btn1">botton1</button>
+</body>
+<script type="text/javascript">
+var b1 = document.getElementById('btn1');
+b1.onclick = (function(that, event) {
+    console.log(that.nodeName);
+});
+</script>
+
+</html>
