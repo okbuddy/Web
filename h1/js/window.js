@@ -1,5 +1,7 @@
  window.onload = function() {
      window.onresize = function() {
+        var a2 = document.getElementById('waveCanvas');
+        var ctx2 = a2.getContext('2d');
          ctx2.canvas.width = window.innerWidth;
          //earth is round totally in presentation
          var $earth = $('.earth');

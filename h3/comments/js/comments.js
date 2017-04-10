@@ -277,7 +277,7 @@ $(function() {
     //show circle
     $(document).click(function(e) {
         //hide popover
-        $("[data-toggle='popover']").popover('hide')
+        $("[data-toggle='popover']").popover('hide');
             //add ring
         var w = 70;
         drawBubble(w);
